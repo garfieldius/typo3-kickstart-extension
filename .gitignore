@@ -1,0 +1,8 @@
+/bin
+/public
+/vendor
+/var
+
+.idea
+.vscode
+.php_cs.cache

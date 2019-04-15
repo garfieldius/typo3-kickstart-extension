@@ -1,0 +1,32 @@
+{
+    "name": "grossberger-georg/kickstart-extension",
+    "description": "Bare TYPO3 extension skeleton",
+    "license": "MIT",
+    "type": "project",
+    "config": {
+        "bin-dir": "bin/",
+        "platform": {
+            "php": "7.2.6"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "GrossbergerGeorg\\KickstartExtension\\": "Classes/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "GrossbergerGeorg\\KickstartExtension\\Installer::run"
+        ]
+    },
+    "require-dev": {
+        "composer/composer": "^1.8",
+        "grossberger-georg/php-dev-tools": "^1.2",
+        "friendsofphp/php-cs-fixer": "^2.14"
+    },
+    "extra": {
+        "typo3/cms": {
+            "web-dir": "vendor/_www/"
+        }
+    }
+}
