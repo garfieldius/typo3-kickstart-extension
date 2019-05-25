@@ -47,15 +47,19 @@ class Installer
         $io = $event->getIO();
         $installer = new static($event->getComposer(), $io);
         $extKey = basename(dirname(__DIR__));
+        $extKey = str_replace(' ', '_', preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $extKey));
         $extKey = (string) $io->askAndValidate(
             'Extension key [<comment>'.$extKey.'</comment>]: ',
             function ($value) {
-                if (is_string($value) && preg_match('/^[a-z][a-z0-9_]+[a-z0-9]$/', $value) && strpos($value, '__') === false) {
+                $value = trim((string) $value);
+                if (preg_match('/^[a-z][a-z0-9_]+[a-z0-9]$/', $value) && strpos($value, '__') === false) {
                     return $value;
                 }
 
                 throw new \RuntimeException('Invalid extension key');
-            }
+            },
+            null,
+            $extKey
         );
 
         $vendor = (string) $io->askAndValidate('Vendor key: ', function ($value) {
