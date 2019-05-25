@@ -62,8 +62,9 @@ class Installer
             $extKey
         );
 
-        $vendor = (string) $io->askAndValidate('Vendor key: ', function ($value) {
-            if (is_string($value) && preg_match('/^[a-z0-9][a-z0-9\\-]+[a-z0-9]$/', $value) && strpos($value, '--') === false) {
+        $vendor = (string) $io->askAndValidate('Vendor composer key: ', function ($value) {
+            $value = trim((string) $value);
+            if (preg_match('/^[a-z0-9][a-z0-9\\-]+[a-z0-9]$/', $value) && strpos($value, '--') === false) {
                 return $value;
             }
 
@@ -72,7 +73,10 @@ class Installer
 
         $name = $vendor . '/' . str_replace('_', '-', $extKey);
         $name = (string) $io->askAndValidate('Composer name [<comment>'.$name.'</comment>]: ', function ($value) {
-            if (is_string($value) && preg_match('/^[a-z0-9][a-z0-9\\-]+[a-z0-9]\\/[a-z][a-z0-9\\-]+[a-z0-9]$/', $value) && strpos($value, '--') === false) {
+            $value = trim((string) $value);
+            $composerPattern = '/^[a-z0-9][a-z0-9\\-]+[a-z0-9]\\/[a-z][a-z0-9\\-]+[a-z0-9]$/';
+
+            if (preg_match($composerPattern, $value) && strpos($value, '--') === false) {
                 return $value;
             }
 
@@ -84,13 +88,18 @@ class Installer
         }, explode('/', $name))) . '\\\\';
 
         $title = ucwords(str_replace('_', ' ', $extKey));
-        $title = (string) $io->askAndValidate('Title: [<comment>' . $extKey . '</comment>]', function ($value) {
-            if (trim($value) !== '') {
-                return $value;
-            }
+        $title = (string) $io->askAndValidate(
+            'Title [<comment>' . $extKey . '</comment>]: ',
+            function ($value) {
+                if (trim($value) !== '') {
+                    return $value;
+                }
 
-            throw new \RuntimeException('Title must not be empty');
-        }, null, $title);
+                throw new \RuntimeException('Title must not be empty');
+            },
+            null,
+            $title
+        );
 
         $licenses = [
             'MIT',
