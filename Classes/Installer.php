@@ -92,13 +92,18 @@ class Installer
             throw new \RuntimeException('Title must not be empty');
         }, null, $title);
 
-        $license = (string) $io->select('License', [
+        $licenses = [
             'MIT',
             'Apache-2.0',
             'GPL-3.0-only',
             'GPL-3.0-or-later',
             'proprietary'
-        ], 'GPL-3.0-or-later');
+        ];
+        $license = (string) $io->select('License', $licenses, 'GPL-3.0-or-later');
+
+        if (is_numeric($license)) {
+            $license = $licenses[$license];
+        }
 
         $description = (string) $io->ask('Description: ', '');
 
